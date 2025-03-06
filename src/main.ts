@@ -4,9 +4,17 @@ import { AppModule } from './app.module';
 
 
 async function bootstrap() {
+  // Create a new NestJS application using the Fastify adapter
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
+
+  // Enable CORS
   app.enableCors();
 
-  await app.listen(5019);
+  // Start the application on port 3000
+  await app.listen(3000);
+
+  console.log('🚀 Local server running at http://localhost:3000');
+
 }
+
 bootstrap();
