@@ -5,15 +5,17 @@ import { AppModule } from './app.module';
 
 let app: NestFastifyApplication;
 
-export const config = {
-  runtime: 'edge', // Required for Vercel Edge
-};
-
 export default async function handler(req: Request): Promise<Response> {
   if (!app) {
     app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
     await app.init();
   }
+
+  app.enableCors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  });
 
   const url = new URL(req.url);
   if (url.pathname === '/') {
@@ -21,6 +23,8 @@ export default async function handler(req: Request): Promise<Response> {
       headers: { 'Content-Type': 'application/json' },
     });
   }
+
+
 
   return new Response('Not Found', { status: 404 });
 }
